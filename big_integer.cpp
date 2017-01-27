@@ -309,7 +309,7 @@ big_integer& big_integer::operator/=(big_integer const& b)
         opt_vector result;
         while (mass.size() != 0)
         {
-            dop.mass.insert(dop.mass.begin(), mass.back());
+            dop.mass.push_front(mass.back());
             mass.pop_back();
             unsigned l = binary(dop, b);
             if (result.size() != 1 || l != 0)
@@ -325,7 +325,7 @@ big_integer& big_integer::operator/=(big_integer const& b)
                 dop.mass.pop_back();
             }
         }
-        reverse(result.begin(), result.end());
+        result.all_reverse();
         swap(mass, result);
     }
     sign = this_sign ^ b.sign;
