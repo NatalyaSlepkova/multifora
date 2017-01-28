@@ -20,15 +20,30 @@ struct optional
     optional(optional const& a) : ok(a.ok)
     {
         if (ok)
+        {
             new (&stor) T (*a);
+        }
     }
 
-    optional(T const& val) : ok(true)
+    optional(T const& a) : ok(true)
     {
-        new (&stor) T (val);
+        new (&stor) T(a);
     }
 
-    optional(nt) : ok(false)
+    optional(T &&a) : ok(true)
+    {
+        new (&stor) T(move(a));
+    }
+
+    optional(optional &&a) : ok(a.ok)
+    {
+        if (a)
+        {
+            new (&stor) T(move(*a));
+        }
+    }
+
+    optional(nullopt_t) : ok(false)
     {
     }
 
@@ -59,9 +74,9 @@ struct optional
         {
             if (!a.ok)
             {
-                new (&other.stor) T(**this);
+                new (&a.stor) T(**this);
                 data_ptr()->T::~T();
-                other.ok = true, ok = false;
+                a.ok = true, ok = false;
             }
             else
             {
