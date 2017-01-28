@@ -40,9 +40,9 @@
         
     private:
         
-        typedef std::tuple<Args...> container;
-        Func_t cur_func;
-        container my_tuple;
+        typedef std::tuple<typename std::decay<Args>::type...> container;
+        mutable typename std::decay<Func_t>::type cur_func;
+        mutable container my_tuple;
         
         template <size_t PH_t, typename... Params>
         auto&& get(place_holder<PH_t>, Params&... params) const
@@ -57,7 +57,7 @@
         }
         
         template <typename Func_t_cur, typename... Args_t, typename... Params>
-        auto get(const my_bind<Func_t_cur, Args_t...> &m_b, Params&... params) const
+        auto get(my_bind<Func_t_cur, Args_t...>& m_b, Params&... params) const
         {
             return m_b(params...);
         }
