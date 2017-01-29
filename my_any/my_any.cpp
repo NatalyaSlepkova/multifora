@@ -13,7 +13,7 @@ public:
 	}
 
 	template <typename T>
-	my_any(const T& t) : held_(new holder<T>(t))
+	my_any(const T& t) : held_(std::move(new holder<T>(t)))
 	{}
 
 	~my_any()
