@@ -102,7 +102,7 @@ private:
 template <typename T>
 T* my_any_cast(my_any* a) 
 {
-    return oper && a->type() == typeid(T) ? &static_cast<my_any::holder<typename std::remove_cv<T>::type>*>(a->held_.get())->held_ : 0;
+    return a && a->type() == typeid(T) ? &static_cast<my_any::holder<typename std::remove_cv<T>::type>*>(a->held_.get())->held_ : 0;
 }
 
 template <typename T>
