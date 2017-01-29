@@ -12,7 +12,7 @@ public:
 	{
 	}
 
-	template<typename T>
+	template <typename T>
 	my_any(const T& t) : held_(new holder<T>(t))
 	{}
 
@@ -42,13 +42,13 @@ public:
     }
 
 	template <typename T>
-	my_any operator=(T&& t)
+	my_any& operator=(T&& t)
 	{
-		my_any(std::move(t).swap(*this));
+		my_any(std::forward<T>.swap(*this));
 		return *this;
 	}
 
-	my_any operator=(my_any&& a)
+	my_any& operator=(my_any&& a)
 	{
 		a.swap(*this);
 		return *this;
@@ -78,12 +78,11 @@ private:
         virtual base_holder* same() const = 0;
 	};
 
-public:
 	template<typename T> struct holder : base_holder
 	{
 		holder(const T& t) : t_(t){}
 
-		holder(T&& t) : t_(static_cast<T&&>(t)) {}
+		holder(T&& t) : t_(std::move<T&&>(t)) {}
 
 		const std::type_info& type() const
 		{
@@ -101,7 +100,7 @@ private:
 };
 
 template <typename T>
-T* any_cast(my_any* a) 
+T* my_any_cast(my_any* a) 
 {
     return oper && a->type() == typeid(T) ? &static_cast<my_any::holder<typename std::remove_cv<T>::type>*>(a->held_.get())->held_ : 0;
 }
