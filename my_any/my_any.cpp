@@ -57,7 +57,7 @@ public:
 	template<typename U>
 	U cast() const
 	{
-		if(typeid(U) != held_->type_info())
+		if(typeid(U) != held_->type())
         {
 			throw std::runtime_error("Bad any cast");
         }
@@ -74,7 +74,7 @@ private:
 	struct base_holder
 	{
 		virtual ~base_holder(){}
-		virtual const std::type_info& type_info() const = 0;
+		virtual const std::type_info& type() const = 0;
         virtual base_holder* same() const = 0;
 	};
 
@@ -85,7 +85,7 @@ public:
 
 		holder(T&& t) : t_(static_cast<T&&>(t)) {}
 
-		const std::type_info& type_info() const
+		const std::type_info& type() const
 		{
 			return typeid(t_);
 		}
@@ -103,7 +103,7 @@ private:
 template <typename T>
 T* any_cast(my_any* a) 
 {
-    return oper && a->type_info() == typeid(T) ? &static_cast<my_any::holder<typename std::remove_cv<T>::type>*>(a->held_.get())->held_ : 0;
+    return oper && a->type() == typeid(T) ? &static_cast<my_any::holder<typename std::remove_cv<T>::type>*>(a->held_.get())->held_ : 0;
 }
 
 template <typename T>
